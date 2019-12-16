@@ -18,6 +18,7 @@
     <properties>
         <version.zeebe>0.21.1</version.zeebe>
         <version.spring.boot>2.2.2.RELEASE</version.spring.boot>
+		<version.aws.sdk>1.11.690</version.aws.sdk>
 
         <!-- release parent settings -->
         <version.java>11</version.java>
@@ -79,6 +80,13 @@
 	      </exclusions>
 	    </dependency>
 
+		<!-- AWS SDK -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-lambda</artifactId>
+			<version>${version.aws.sdk}</version>
+		</dependency>
+		
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
