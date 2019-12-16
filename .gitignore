@@ -1,10 +1,11 @@
+target/*
+!target/*.jar
 .classpath
 .gradle/
 .project
 .settings/
 .idea/
 .vscode/
-target/*
 coverage*
 dist/
 trash/
@@ -22,4 +23,3 @@ trace.out
 .coverage/
 .logs/
 *.iml
-/target/
