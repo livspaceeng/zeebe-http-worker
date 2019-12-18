@@ -24,16 +24,13 @@ public class ZeebeHttpWorkerApplication extends SpringBootServletInitializer {
   @Autowired private HttpJobHandler httpJobHandler;
   @Autowired private LambdaJobHandler lambdaJobHandler;
 
-  @ZeebeWorker(type = "platform.commons.http", name = "platform-http-worker", maxJobsActive = 32)
+  @ZeebeWorker(type = "http", name = "platform-http-worker", maxJobsActive = 32)
   public void handleHttpJob(final JobClient client, final ActivatedJob job)
       throws IOException, InterruptedException {
     httpJobHandler.handle(client, job);
   }
 
-  @ZeebeWorker(
-      type = "platform.commons.lambda",
-      name = "platform-lambda-worker",
-      maxJobsActive = 32)
+  @ZeebeWorker(type = "lambda", name = "platform-lambda-worker", maxJobsActive = 32)
   public void handleLambdaJob(final JobClient client, final ActivatedJob job) {
     lambdaJobHandler.handle(client, job);
   }
