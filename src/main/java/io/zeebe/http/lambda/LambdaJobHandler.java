@@ -38,7 +38,7 @@ public class LambdaJobHandler implements JobHandler {
   }
 
   @Override
-  public void handle(JobClient client, ActivatedJob job) {
+  public void handle(JobClient client, ActivatedJob job) throws Exception {
     log.info(":::: Handling job {} of type {} ::::", job.getKey(), job.getType());
     try {
       Map<String, Object> jobVariables = job.getVariablesAsMap();
