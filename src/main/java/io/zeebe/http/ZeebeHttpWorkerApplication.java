@@ -1,8 +1,9 @@
 package io.zeebe.http;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,7 +36,7 @@ public class ZeebeHttpWorkerApplication extends SpringBootServletInitializer {
       name = "${zeebe.worker.http.name}",
       maxJobsActive = 32)
   public void handleHttpJob(final JobClient client, final ActivatedJob job)
-      throws IOException, InterruptedException {
+      throws IOException, InterruptedException, ExecutionException, TimeoutException {
     httpJobHandler.handle(client, job);
   }
 
@@ -47,7 +48,7 @@ public class ZeebeHttpWorkerApplication extends SpringBootServletInitializer {
     lambdaJobHandler.handle(client, job);
   }
 
-  //@RabbitListener(queues = "${rabbit.queue.name}", concurrency = "${rabbit.queue.concurrency}")
+  // @RabbitListener(queues = "${rabbit.queue.name}", concurrency = "${rabbit.queue.concurrency}")
   public void handleRabbitEvents(String message)
       throws JsonMappingException, JsonProcessingException {
     rabbitEventConnector.correlateEvent(message);
