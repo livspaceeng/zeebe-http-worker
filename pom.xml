@@ -16,10 +16,10 @@
     </parent>
 
     <properties>
-        <version.zeebe>0.22.1</version.zeebe>
-        <version.zeebe.spring>0.22.0</version.zeebe.spring>
-        <version.spring.boot>2.2.4.RELEASE</version.spring.boot>
-		<version.aws.sdk>1.11.690</version.aws.sdk>
+        <version.aws.sdk>1.11.690</version.aws.sdk>
+        <version.zeebe>0.23.1</version.zeebe>
+        <version.zeebe.spring>0.23.0</version.zeebe.spring>
+        <version.spring.boot>2.2.6.RELEASE</version.spring.boot>
 
         <!-- release parent settings -->
         <version.java>11</version.java>
@@ -115,7 +115,15 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.26.0</version>
+            <version>2.26.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

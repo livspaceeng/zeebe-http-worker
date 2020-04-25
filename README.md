@@ -28,6 +28,8 @@ Example BPMN with service task:
   * `method` - the HTTP method to use (default: `GET`, allowed:  `post` | `get` | `put` | `delete` | `patch`)
   * `statusCodeCompletion` - Status codes that lead to completion of the service task (default: `1xx,2xx`, allowed: comma separated list of codes including 1xx, 2xx, 3xx, 4xx and 5xx)
   * `statusCodeFailure` - Status codes that lead to the job failing  (default: `3xx,4xx,5xx`, allowed: comma separated list of codes including 1xx, 2xx, 3xx, 4xx and 5xx)
+  * `errorCodePath` - path expression (dot notation) to extract the error code of a failed response body (e.g. `error.code`). If the error code is present then a BPMN error is thrown with this code instead of failing the job. Otherwise, that leads to the job failing.
+  * `errorMessagePath` - path expression (dot notation) to extract the error message of a failed response body (e.g. `error.message`). If the error message is present then it is used as the error message of the BPMN error. Otherwise, a default error message is used.
   
 * optional variables:
   * `body` - the request body as JSON
@@ -44,7 +46,7 @@ You can use placeholders in the form of `{{PLACEHOLDER}}` at all places, they wi
 
 * custom headers from the BPMN model
 * Workflow variables
-* Configuration Variables from URL (see below)
+* Local Environment Variables or Configuration Variables from URL (see below)
 
 [Mustache](https://github.com/spullara/mustache.java) is used for replacing the placeholders, refer to their docs to check possibilities.
 
@@ -106,14 +108,21 @@ The connection to the broker Zeebe can be changed by setting the environment var
 
 * `ZEEBE_CLIENT_BROKER_CONTACTPOINT` (default: `127.0.0.1:26500`).
 * `ZEEBE_CLIENT_SECURITY_PLAINTEXT` (default: true).
-* `ZEEBE_WORKER_DEFAULTNAME` (default `http-worker`)
-* `ZEEBE_WORKER_DEFAULTTYPE` (default `http`)
+* `ZEEBE_WORKER_DEFAULTNAME` (default: `http-worker`)
+* `ZEEBE_WORKER_DEFAULTTYPE` (default: `http`)
+>>>>>>> f9171117bca24e2eeffaf57c1c32ceb570b36bfb
 
 This worker uses [Spring Zeebe]( https://github.com/zeebe-io/spring-zeebe/) underneath, so all configuration options available there are also available here.
 
-## Configuration Variables from URL
+## Configuration Variables
 
-You can load additional configuration values used to substitute placeholders. Therefor the worker will query an HTTP endpoint and expects a JSON back:
+You can load additional configuration values used to substitute placeholders:
+- Remotely via HTTP (`ENV_VARS_URL`)
+- Locally using environment variables (if `ENV_VARS_URL` isn't set)
+
+### Remote Variables Configuration
+
+If `ENV_VARS_URL` is configured, the worker will query an HTTP endpoint and expects a JSON back:
 
 ```
 [
@@ -137,6 +146,13 @@ To load additional config variables from an URL set these environment variables:
 * `ENV_VARS_M2M_CLIENT_SECRET`
 * `ENV_VARS_M2M_AUDIENCE`
 
+### Local Environment Variables
+
+To avoid exposing sensitive information, a prefix can be used to filter environment variables.
+
+To change the prefix set these environment variables:
+* `LOCAL_ENV_VARS_PREFIX` (default: `"ZEEBE_ENV_"`)
+* `LOCAL_ENV_VARS_REMOVE_PREFIX` (default: `true`)
 
 ## Code of Conduct
 
