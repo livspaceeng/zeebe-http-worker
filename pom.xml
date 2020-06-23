@@ -17,7 +17,7 @@
 
     <properties>
         <version.aws.sdk>1.11.690</version.aws.sdk>
-        <version.zeebe>0.23.1</version.zeebe>
+        <version.zeebe>0.23.2</version.zeebe>
         <version.zeebe.spring>0.23.0</version.zeebe.spring>
         <version.spring.boot>2.2.6.RELEASE</version.spring.boot>
 

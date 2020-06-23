@@ -30,6 +30,8 @@ public class LambdaJobHandler implements JobHandler {
   private static final String PARAMETER_LAMBDA_NAME = "lambdaName";
   private static final String PARAMETER_LAMBDA_INPUT = "lambdaInput";
   private static final String PARAMETER_LAMBDA_OUTPUT = "lambdaOutput";
+  private static final String PARAMETER_LAMBDA_INPUT_KEYNAME = "lambdaInputKeyName";
+  private static final String PARAMETER_LAMBDA_OUTPUT_KEYNAME = "lambdaOutputKeyName";
 
   @PostConstruct
   public void init() {
@@ -43,10 +45,16 @@ public class LambdaJobHandler implements JobHandler {
     try {
       Map<String, Object> jobVariables = job.getVariablesAsMap();
       String lambdaName = job.getCustomHeaders().get(PARAMETER_LAMBDA_NAME);
-      String lambdaInput = (String) jobVariables.get(PARAMETER_LAMBDA_INPUT);
+      String lambdaInputKeyName =
+          job.getCustomHeaders()
+              .getOrDefault(PARAMETER_LAMBDA_INPUT_KEYNAME, PARAMETER_LAMBDA_INPUT);
+      String lambdaOutputKeyName =
+          job.getCustomHeaders()
+              .getOrDefault(PARAMETER_LAMBDA_OUTPUT_KEYNAME, PARAMETER_LAMBDA_OUTPUT);
+
+      String lambdaInput = (String) jobVariables.get(lambdaInputKeyName);
       InvokeRequest lambdaRequest =
           new InvokeRequest().withFunctionName(lambdaName).withPayload(lambdaInput);
-
       lambdaRequest.setInvocationType(InvocationType.RequestResponse); // Use Event for Async
 
       InvokeResult lambdaResult = this.lambdaClient.invoke(lambdaRequest);
@@ -57,7 +65,7 @@ public class LambdaJobHandler implements JobHandler {
       }
       log.info(":::: Output of lambda function {} : {} ::::", lambdaName, responseData);
 
-      jobVariables.put(PARAMETER_LAMBDA_OUTPUT, responseData);
+      jobVariables.put(lambdaOutputKeyName, responseData);
       client.newCompleteCommand(job.getKey()).variables(jobVariables).send().join();
     } catch (AWSLambdaException e) {
       log.error(
