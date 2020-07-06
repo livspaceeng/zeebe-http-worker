@@ -70,6 +70,7 @@ public class LambdaJobHandler implements JobHandler {
     } catch (AWSLambdaException e) {
       log.error(
           ":::: Exception occurred while invoking Lambda due to {} ::::", e.getErrorMessage());
+      client.newFailCommand(job.getKey()).retries(0).errorMessage(e.getErrorMessage()).send().join();
     }
   }
 }
